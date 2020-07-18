@@ -9,6 +9,6 @@ nix-env -if https://github.com/DavHau/systemd2nix/tarball/master
 
 #### Usage
 ```bash
-https://github.com/DavHau/systemd2nix
+systemd2nix < example.service
 ```
 
