@@ -4,10 +4,11 @@ import json
 import re
 import sys
 from argparse import ArgumentParser
-from configparser import ConfigParser
 
 
 class Keys:
+    # list of options that move to the top level of the nix attrset
+    # The 'Environment' option is not listed because it is processed by `parse_environment()`
     
     list_of_strings = [
         'after',
@@ -42,19 +43,8 @@ class Keys:
     all = list_of_strings + rest
 
 
-class MyParser(ConfigParser):
-    def as_dict(self):
-        d = dict(self._sections)
-        for k in d:
-            d[k] = dict(self._defaults, **d[k])
-            d[k].pop('__name__', None)
-        return d
-
-    def optionxform(self, optionstr: str) -> str:
-        return optionstr
-
-
 def key2nix(key: str):
+    # convert to camel case
     return key[0].lower() + key[1:]
 
 
@@ -154,7 +144,7 @@ def parse_unit_file(file_content: str) -> dict:
 
 def parse_args():
     parser = ArgumentParser(
-        description="Convert systemd service files to nixpkgs syntax",
+        description="Convert systemd service files to nix syntax for nixpkgs",
         usage='systemd2nix < example.service')
     return parser.parse_args()
 
