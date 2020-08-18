@@ -119,13 +119,18 @@ def parse_unit_file(file_content: str) -> dict:
     config = {}
     section = None
     for line in file_content.splitlines():
+        # match section headers like '[Unit]'
         match = re.fullmatch(r"^\[(\w*)\]$", line)
         if match:
             section = match.groups()[0]
             if section not in config:
                 config[section] = {}
             continue
-        match = re.fullmatch(r"^(\w*)=(.*)$", line)
+        # match key-value pairs with quotes
+        match = re.fullmatch(r'^(\w*)="(.*)"$', line)
+        # match key-value pairs without quotes
+        if not match:
+            match = re.fullmatch(r"^(\w*)=(.*)$", line)
         if not match:
             continue
         if not section:
